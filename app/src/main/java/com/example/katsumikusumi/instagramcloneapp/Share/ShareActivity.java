@@ -1,4 +1,4 @@
-package com.example.katsumikusumi.instagramcloneapp;
+package com.example.katsumikusumi.instagramcloneapp.Share;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -8,14 +8,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.katsumikusumi.instagramcloneapp.R;
 import com.example.katsumikusumi.instagramcloneapp.Utils.BottomNavigationViewHelper;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
-public class SearchActivity extends AppCompatActivity{
-    private static final String TAG = "SearchActivity";
-    private static final int ACTIVITY_NUM = 1;
+public class ShareActivity extends AppCompatActivity{
+    private static final String TAG = "ShareActivity";
+    private static final int ACTIVITY_NUM = 2;
 
-    private Context mContext = SearchActivity.this;
+    private Context mContext = ShareActivity.this;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

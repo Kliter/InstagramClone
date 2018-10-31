@@ -1,5 +1,6 @@
-package com.example.katsumikusumi.instagramcloneapp;
+package com.example.katsumikusumi.instagramcloneapp.Search;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -7,14 +8,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.katsumikusumi.instagramcloneapp.R;
 import com.example.katsumikusumi.instagramcloneapp.Utils.BottomNavigationViewHelper;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
-public class ProfileActivity extends AppCompatActivity{
-    private static final String TAG = "ProfileActivity";
-    private static final int ACTIVITY_NUM = 4;
+public class SearchActivity extends AppCompatActivity{
+    private static final String TAG = "SearchActivity";
+    private static final int ACTIVITY_NUM = 1;
 
-    private ProfileActivity mContext = ProfileActivity.this;
+    private Context mContext = SearchActivity.this;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
