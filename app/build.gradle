@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.example.katsumikusumi.instagramclone"
         minSdkVersion 18
@@ -33,4 +33,7 @@ dependencies {
 
     //BottomNavigationViewEx Library
     implementation 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
+
+    //Circle ImageView
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
 }
