@@ -26,13 +26,13 @@ public class HomeActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: starting.");
 
         setupBottomNavigationView();
-        setuViewPager();
+        setViewPager();
     }
 
     /**
      * Responsible for adding the 3 tabs Camera, Home, Messages
      */
-    private void setuViewPager(){
+    private void setViewPager(){
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new CameraFragment());//index 0
         adapter.addFragment(new HomeFragment());//index 1
