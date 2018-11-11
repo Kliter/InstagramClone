@@ -1,4 +1,4 @@
-package com.example.katsumikusumi.instagramcloneapp.Home;
+package com.example.katsumikusumi.instagramcloneapp.Utils;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

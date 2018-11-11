@@ -11,6 +11,7 @@ import android.view.MenuItem;
 
 import com.example.katsumikusumi.instagramcloneapp.R;
 import com.example.katsumikusumi.instagramcloneapp.Utils.BottomNavigationViewHelper;
+import com.example.katsumikusumi.instagramcloneapp.Utils.SectionsPagerAdapter;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 public class HomeActivity extends AppCompatActivity {
