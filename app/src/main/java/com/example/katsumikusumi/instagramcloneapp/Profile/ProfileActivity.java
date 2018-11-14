@@ -9,12 +9,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.example.katsumikusumi.instagramcloneapp.R;
 import com.example.katsumikusumi.instagramcloneapp.Utils.BottomNavigationViewHelper;
+import com.example.katsumikusumi.instagramcloneapp.Utils.GridÎmageAdapter;
+import com.example.katsumikusumi.instagramcloneapp.Utils.UniversalImageLoader;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+
+import java.util.ArrayList;
 
 public class ProfileActivity extends AppCompatActivity{
     private static final String TAG = "ProfileActivity";
@@ -23,6 +28,7 @@ public class ProfileActivity extends AppCompatActivity{
     private ProfileActivity mContext = ProfileActivity.this;
 
     private ProgressBar mProgressBar;
+    private ImageView profilePhoto;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,6 +41,45 @@ public class ProfileActivity extends AppCompatActivity{
 
         setupBottomNavigationView();
         setupToolbar();
+        setupActivityWidgets();
+        setProfileImage();
+
+        tempGridSetup();
+    }
+
+    private void tempGridSetup(){
+        ArrayList<String> imgURLs = new ArrayList<>();
+        imgURLs.add("https://weekly.ascii.jp/elem/000/000/019/19847/android_limg_280x.jpg");
+        imgURLs.add("https://weekly.ascii.jp/elem/000/000/019/19847/android_limg_280x.jpg");
+        imgURLs.add("https://weekly.ascii.jp/elem/000/000/019/19847/android_limg_280x.jpg");
+        imgURLs.add("https://weekly.ascii.jp/elem/000/000/019/19847/android_limg_280x.jpg");
+        imgURLs.add("https://weekly.ascii.jp/elem/000/000/019/19847/android_limg_280x.jpg");
+        imgURLs.add("https://weekly.ascii.jp/elem/000/000/019/19847/android_limg_280x.jpg");
+        imgURLs.add("https://weekly.ascii.jp/elem/000/000/019/19847/android_limg_280x.jpg");
+        imgURLs.add("https://weekly.ascii.jp/elem/000/000/019/19847/android_limg_280x.jpg");
+        imgURLs.add("https://weekly.ascii.jp/elem/000/000/019/19847/android_limg_280x.jpg");
+        imgURLs.add("https://weekly.ascii.jp/elem/000/000/019/19847/android_limg_280x.jpg");
+        setupImageGrid(imgURLs);
+
+    }
+
+    private void setupImageGrid(ArrayList<String> imgURLs){
+        GridView gridView = findViewById(R.id.gridView);
+
+        GridÎmageAdapter adapter = new GridÎmageAdapter(mContext, R.layout.layout_grid_imageview, "", imgURLs);
+        gridView.setAdapter(adapter);
+    }
+
+    private void setProfileImage(){
+        Log.d(TAG, "setProfileImage: setting profile photo.");
+        String imgURL = "https://weekly.ascii.jp/elem/000/000/019/19847/android_limg_280x.jpg";
+        UniversalImageLoader.setImage(imgURL, profilePhoto, mProgressBar, "https://");
+    }
+
+    private void setupActivityWidgets(){
+        mProgressBar = (ProgressBar) findViewById(R.id.profileProgressBar);
+        mProgressBar.setVisibility(View.GONE);
+        profilePhoto = (ImageView) findViewById(R.id.profile_photo);
     }
 
     private  void setupToolbar(){
