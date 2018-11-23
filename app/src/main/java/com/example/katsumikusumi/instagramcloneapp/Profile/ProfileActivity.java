@@ -29,6 +29,7 @@ public class ProfileActivity extends AppCompatActivity{
 
     private ProgressBar mProgressBar;
     private ImageView profilePhoto;
+    private static final int NUM_GRID_COLUMNS = 3;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,6 +66,10 @@ public class ProfileActivity extends AppCompatActivity{
 
     private void setupImageGrid(ArrayList<String> imgURLs){
         GridView gridView = findViewById(R.id.gridView);
+
+        int gridWidth = getResources().getDisplayMetrics().widthPixels;
+        int imageWidth = gridWidth/NUM_GRID_COLUMNS;
+        gridView.setColumnWidth(imageWidth);
 
         GridÎmageAdapter adapter = new GridÎmageAdapter(mContext, R.layout.layout_grid_imageview, "", imgURLs);
         gridView.setAdapter(adapter);
