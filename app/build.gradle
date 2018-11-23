@@ -5,7 +5,7 @@ android {
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
     defaultConfig {
-        applicationId "com.example.katsumikusumi.instagramclone"
+        applicationId "com.example.katsumikusumi.instagramcloneapp"
         minSdkVersion 18
         targetSdkVersion 28
         versionCode 1
@@ -41,4 +41,8 @@ dependencies {
 
     //Universal image loader
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+
+    //Firebase
+    implementation 'com.google.firebase:firebase-core:16.0.1'
 }
+apply plugin: 'com.google.gms.google-services'
