@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.katsumikusumi.instagramcloneapp.Home.HomeActivity;
 import com.example.katsumikusumi.instagramcloneapp.R;
+import com.example.katsumikusumi.instagramcloneapp.Utils.FirebaseMethods;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -35,15 +36,47 @@ public class RegisterActivity extends AppCompatActivity {
     //firebase
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseMethods firebaseMethods;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        mContext = RegisterActivity.this;
+        firebaseMethods = new FirebaseMethods(mContext);
         Log.d(TAG, "onCreate: started.");
 
         initWidgets();
         setupFirebaseAuth();
+        init();
+    }
+
+    private void init(){
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                email = mEmail.getText().toString();
+                username = mUsername.getText().toString();
+                password = mPassword.getText().toString();
+
+                if (checkInputs(email, username, password)) {
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    loadingPleaseWait.setVisibility(View.VISIBLE);
+
+                    firebaseMethods.registerNewEmail(email, username, password);
+                }
+            }
+        });
+    }
+
+    private boolean checkInputs(String email, String username, String password) {
+        Log.d(TAG, "checkInputs: cehckiing inputs for null values.");
+
+        if(email.equals("") || username.equals("") || password.equals("")) {
+            Toast.makeText(mContext, "All fields must be filled out.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     /*
@@ -53,6 +86,8 @@ public class RegisterActivity extends AppCompatActivity {
         Log.d(TAG, "initWidgets: Initializing widgets");
         loadingPleaseWait = (TextView) findViewById(R.id.loadingPleaseWait);
         mEmail = (EditText) findViewById(R.id.input_email);
+        mUsername = (EditText) findViewById(R.id.input_username);
+        btnRegister = (Button) findViewById(R.id.btn_register);
         mPassword = (EditText) findViewById(R.id.input_password);
         mContext = RegisterActivity.this;
         mProgressBar.setVisibility(View.GONE);
