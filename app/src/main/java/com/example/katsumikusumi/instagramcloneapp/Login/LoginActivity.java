@@ -14,12 +14,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.katsumikusumi.instagramcloneapp.Home.HomeActivity;
 import com.example.katsumikusumi.instagramcloneapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import org.w3c.dom.Text;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
@@ -109,6 +112,25 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+
+        TextView linkSignup = (TextView) findViewById(R.id.link_signup);
+        linkSignup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: navigating to register screen.");
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        /*
+        If the user is logged in, then navigate to HomeActivity and call finish().
+         */
+        if (mAuth.getCurrentUser() != null) {
+            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
     }
 
