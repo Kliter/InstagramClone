@@ -36,8 +36,6 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mEmail, mPassword;
     private TextView mPleaseWait;
 
-
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
                                     } else {
                                         // If sign in fails, display a message to the user.
                                         Log.w(TAG, "signInWithEmail:failure", task.getException());
-                                        Toast.makeText(LoginActivity.this, R.string.auth_success,
+                                        Toast.makeText(LoginActivity.this, R.string.auth_failed,
                                                 Toast.LENGTH_SHORT).show();
                                         mProgressBar.setVisibility(View.GONE);
                                         mPleaseWait.setVisibility(View.GONE);
