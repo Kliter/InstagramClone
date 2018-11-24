@@ -36,8 +36,6 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mEmail, mPassword;
     private TextView mPleaseWait;
 
-
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
