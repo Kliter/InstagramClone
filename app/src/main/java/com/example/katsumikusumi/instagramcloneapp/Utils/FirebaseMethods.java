@@ -5,13 +5,17 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.katsumikusumi.instagramcloneapp.R;
 import com.example.katsumikusumi.instagramcloneapp.models.User;
+import com.example.katsumikusumi.instagramcloneapp.models.UserAccoutSettigs;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class FirebaseMethods {
     private static final String TAG = "FirebaseMethods";
@@ -19,13 +23,18 @@ public class FirebaseMethods {
     //firebase
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference myRef;
     private String userID;
+
 
     private Context mContext;
 
     public FirebaseMethods(Context context){
-        mContext = context;
         mAuth = FirebaseAuth.getInstance();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = mFirebaseDatabase.getReference();
+        mContext = context;
 
         if (mAuth.getCurrentUser() != null) {
             userID = mAuth.getCurrentUser().getUid();
@@ -36,7 +45,7 @@ public class FirebaseMethods {
         Log.d(TAG, "checkIfUserExists: checking if " + username + "already exists.");
 
         User user = new User();
-        for (DataSnapshot ds: dataSnapshot.getChildren()) {
+        for (DataSnapshot ds: dataSnapshot.child(userID).getChildren()) {
             Log.d(TAG, "checkIfUserExists: datasnapshot: " + ds);
 
             user.setEmail(ds.getValue(User.class).getUsername());
@@ -75,5 +84,28 @@ public class FirebaseMethods {
                         }
                     }
                 });
+    }
+
+    public void addNewUser(String email, String username, String description, String website, String profile_photo) {
+        User user = new User(userID, 1, email, StringManipulation.condenseUsername(username));
+
+        myRef.child(mContext.getString(R.string.dbname_users))
+                .child(userID)
+                .setValue(user);
+
+        UserAccoutSettigs settings = new UserAccoutSettigs(
+                description,
+                username,
+                0,
+                0,
+                0,
+                profile_photo,
+                username,
+                website
+        );
+
+        myRef.child(mContext.getString(R.string.user_account_settigs))
+                .child(userID)
+                .setValue(settings);
     }
 }
