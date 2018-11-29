@@ -128,7 +128,7 @@ public class RegisterActivity extends AppCompatActivity {
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
+                final FirebaseUser user = firebaseAuth.getCurrentUser();
 
                 if (user != null) {
                     //user is signed in
@@ -145,6 +145,9 @@ public class RegisterActivity extends AppCompatActivity {
                             username = username + append;
 
                             //add new user to the database
+                            firebaseMethods.addNewUser(email, username, "", "", "");
+                            Toast.makeText(mContext, "Signup successful. Sending verification email.", Toast.LENGTH_SHORT).show();
+
 
                             //add new user_account_settings to the database
                         }
