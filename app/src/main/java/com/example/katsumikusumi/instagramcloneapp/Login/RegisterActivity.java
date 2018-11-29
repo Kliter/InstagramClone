@@ -94,6 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void initWidgets(){
         Log.d(TAG, "initWidgets: Initializing widgets");
         loadingPleaseWait = (TextView) findViewById(R.id.loadingPleaseWait);
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mEmail = (EditText) findViewById(R.id.input_email);
         mUsername = (EditText) findViewById(R.id.input_username);
         btnRegister = (Button) findViewById(R.id.btn_register);
@@ -148,8 +149,7 @@ public class RegisterActivity extends AppCompatActivity {
                             firebaseMethods.addNewUser(email, username, "", "", "");
                             Toast.makeText(mContext, "Signup successful. Sending verification email.", Toast.LENGTH_SHORT).show();
 
-
-                            //add new user_account_settings to the database
+                            mAuth.signOut();
                         }
 
                         @Override
@@ -157,6 +157,8 @@ public class RegisterActivity extends AppCompatActivity {
 
                         }
                     });
+
+                    finish();
                 } else {
                     //user is signed out
                     Log.d(TAG, "onAuthStateChanged: signed_out");
