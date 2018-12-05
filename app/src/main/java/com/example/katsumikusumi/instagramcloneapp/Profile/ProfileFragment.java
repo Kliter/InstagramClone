@@ -1,5 +1,6 @@
 package com.example.katsumikusumi.instagramcloneapp.Profile;
 
+import android.accounts.Account;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -70,13 +71,26 @@ public class ProfileFragment extends Fragment {
         mFollowing = (TextView) view.findViewById(R.id.tvFollowing);
         mProgressBar = (ProgressBar) view.findViewById(R.id.profileProgressBar);
         gridView = (GridView) view.findViewById(R.id.gridView);
-        toolbar = (Toolbar) view.findViewById(R.id.profileToolbar);
+        toolbar = (Toolbar) view.findViewById(R.id.profileToolBar);
         profileMenu = (ImageView) view.findViewById(R.id.profileMenu);
         bottomNavigationView = (BottomNavigationViewEx) view.findViewById(R.id.bottomNavViewBar);
         mContext = getActivity();
 
         setupBottomNavigationView();
         setupToolbar();
+
+        setupFirebaseAuth();
+
+        TextView editProfile = (TextView) view.findViewById(R.id.textEditProfile);
+        editProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: navigating to " + mContext.getString(R.string.edit_profile_fragment));
+                Intent intent = new Intent(getActivity(), AccountSettingsActivity.class);
+                intent.putExtra(getString(R.string.calling_activity), getString(R.string.profile_activity));
+                startActivity(intent);
+            }
+        });
 
         Log.d(TAG, "onCreateView: started.");
 
