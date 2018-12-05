@@ -2,7 +2,7 @@ package com.example.katsumikusumi.instagramcloneapp.models;
 
 import com.google.firebase.database.FirebaseDatabase;
 
-public class UserAccoutSettigs {
+public class UserAccountSettings {
 
     private String description;
     private String display_name;
@@ -13,7 +13,7 @@ public class UserAccoutSettigs {
     private String username;
     private String website;
 
-    public UserAccoutSettigs(String description, String display_name, long followers, long followings, long posts, String profile_photo, String username, String website) {
+    public UserAccountSettings(String description, String display_name, long followers, long followings, long posts, String profile_photo, String username, String website) {
         this.description = description;
         this.display_name = display_name;
         this.followers = followers;
@@ -24,7 +24,7 @@ public class UserAccoutSettigs {
         this.website = website;
     }
 
-    public UserAccoutSettigs() {}
+    public UserAccountSettings() {}
 
     public String getDescription() {
         return description;
