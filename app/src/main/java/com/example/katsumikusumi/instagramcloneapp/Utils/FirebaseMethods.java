@@ -6,9 +6,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.katsumikusumi.instagramcloneapp.R;
-import com.example.katsumikusumi.instagramcloneapp.models.User;
-import com.example.katsumikusumi.instagramcloneapp.models.UserAccountSettings;
-import com.example.katsumikusumi.instagramcloneapp.models.UserSettings;
+import com.example.katsumikusumi.instagramcloneapp.Models.User;
+import com.example.katsumikusumi.instagramcloneapp.Models.UserAccountSettings;
+import com.example.katsumikusumi.instagramcloneapp.Models.UserSettings;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;

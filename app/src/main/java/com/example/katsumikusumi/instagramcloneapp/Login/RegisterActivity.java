@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.example.katsumikusumi.instagramcloneapp.R;
 import com.example.katsumikusumi.instagramcloneapp.Utils.FirebaseMethods;
-import com.example.katsumikusumi.instagramcloneapp.models.User;
+import com.example.katsumikusumi.instagramcloneapp.Models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;

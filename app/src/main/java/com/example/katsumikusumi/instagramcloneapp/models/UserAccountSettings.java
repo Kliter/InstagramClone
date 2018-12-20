@@ -1,4 +1,4 @@
-package com.example.katsumikusumi.instagramcloneapp.models;
+package com.example.katsumikusumi.instagramcloneapp.Models;
 
 public class UserAccountSettings {
 
