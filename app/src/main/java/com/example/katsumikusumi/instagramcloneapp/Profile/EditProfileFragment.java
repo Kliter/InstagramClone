@@ -33,7 +33,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.widget.Toast.makeText;
 
-public class EditProfileFragment extends Fragment {
+public class EditProfileFragment extends Fragment implements ConfirmPasswordDialog.OnConfirmPasswordListener {
+
+    @Override
+    public void onConfirmPassword(String password) {
+        Log.d(TAG, "onConfirmPassword: got the password: "+ password);
+    }
 
     private static final String TAG = "EditProfileFragment";
 
@@ -118,9 +123,11 @@ public class EditProfileFragment extends Fragment {
             //           - Confirm the password and email.
             ConfirmPasswordDialog dialog = new ConfirmPasswordDialog();
             dialog.show(getFragmentManager(), getString(R.string.confirm_password_dialog));
+            dialog.setTargetFragment(EditProfileFragment.this, 1);
 
             //Step2: check if the email already is registered.
             //           - fetchProvidersForEmail(String email)
+
             //Step3: change the email.
             //           - submit the new email to the database and authentication.
         }
@@ -244,4 +251,5 @@ public class EditProfileFragment extends Fragment {
     /*
      * ----------------------------Firebase---------------------------------------------------------
      */
+
 }
