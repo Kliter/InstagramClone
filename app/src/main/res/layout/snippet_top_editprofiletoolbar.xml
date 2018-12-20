@@ -23,7 +23,8 @@
                         android:layout_marginEnd="20dp"
                         android:layout_centerVertical="true"
                         android:id="@+id/backArrow"
-                        android:src="@drawable/ic_backarrow"/>
+                        android:src="@drawable/ic_backarrow"
+                        android:contentDescription="anyStringValue"/>
 
                     <TextView
                         android:layout_toRightOf="@+id/backArrow"
@@ -44,7 +45,8 @@
                         android:layout_centerVertical="true"
                         android:id="@+id/saveChanges"
                         android:src="@drawable/ic_checkmark"
-                        android:layout_alignParentRight="true"/>
+                        android:layout_alignParentEnd="true"
+                        android:contentDescription="anyStringValue"/>
 
                 </RelativeLayout>
 

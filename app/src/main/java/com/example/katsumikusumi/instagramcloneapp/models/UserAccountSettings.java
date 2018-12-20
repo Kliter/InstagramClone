@@ -1,7 +1,5 @@
 package com.example.katsumikusumi.instagramcloneapp.models;
 
-import com.google.firebase.database.FirebaseDatabase;
-
 public class UserAccountSettings {
 
     private String description;

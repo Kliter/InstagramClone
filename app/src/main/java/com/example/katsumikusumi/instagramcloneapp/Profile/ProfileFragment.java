@@ -1,6 +1,5 @@
 package com.example.katsumikusumi.instagramcloneapp.Profile;
 
-import android.accounts.Account;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,9 +18,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.katsumikusumi.instagramcloneapp.Login.LoginActivity;
 import com.example.katsumikusumi.instagramcloneapp.R;
 import com.example.katsumikusumi.instagramcloneapp.Utils.BottomNavigationViewHelper;
+import com.example.katsumikusumi.instagramcloneapp.Utils.FirebaseMethods;
+import com.example.katsumikusumi.instagramcloneapp.Utils.UniversalImageLoader;
+import com.example.katsumikusumi.instagramcloneapp.models.UserAccountSettings;
+import com.example.katsumikusumi.instagramcloneapp.models.UserSettings;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,8 +33,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
-import org.w3c.dom.Text;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileFragment extends Fragment {
@@ -41,7 +41,7 @@ public class ProfileFragment extends Fragment {
 
     private static final int ACTIVITY_NUM = 4;
 
-    private TextView mPosts, mFollowers, mFollowing, mDisplayName, mUsername, mWebsites, mDescription;
+    private TextView mPosts, mFollowers, mFollowing, mDisplayName, mUsername, mWebsite, mDescription;
     private ProgressBar mProgressBar;
     private CircleImageView mProfilePhoto;
     private GridView gridView;
@@ -56,6 +56,7 @@ public class ProfileFragment extends Fragment {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference myRef;
+    private FirebaseMethods mFirebaseMethods;
 
     @Nullable
     @Override
@@ -63,8 +64,8 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         mDisplayName = (TextView) view.findViewById(R.id.display_name);
         mUsername = (TextView) view.findViewById(R.id.username);
-        mWebsites = (TextView) view.findViewById(R.id.website);
-        mDescription = (TextView) view.findViewById(R.id.description);
+        mWebsite = (TextView) view.findViewById(R.id.website);
+        mDescription = (TextView) view.findViewById(R.id.discription);
         mProfilePhoto = (CircleImageView) view.findViewById(R.id.profile_photo);
         mPosts = (TextView) view.findViewById(R.id.tvPosts);
         mFollowers = (TextView) view.findViewById(R.id.tvFollowers);
@@ -75,30 +76,36 @@ public class ProfileFragment extends Fragment {
         profileMenu = (ImageView) view.findViewById(R.id.profileMenu);
         bottomNavigationView = (BottomNavigationViewEx) view.findViewById(R.id.bottomNavViewBar);
         mContext = getActivity();
+        mFirebaseMethods = new FirebaseMethods(getActivity());
+        Log.d(TAG, "onCreateView: started.");
 
         setupBottomNavigationView();
         setupToolbar();
 
         setupFirebaseAuth();
 
-        TextView editProfile = (TextView) view.findViewById(R.id.textEditProfile);
-        editProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: navigating to " + mContext.getString(R.string.edit_profile_fragment));
-                Intent intent = new Intent(getActivity(), AccountSettingsActivity.class);
-                intent.putExtra(getString(R.string.calling_activity), getString(R.string.profile_activity));
-                startActivity(intent);
-            }
-        });
-
-        Log.d(TAG, "onCreateView: started.");
-
         return view;
     }
 
-    private  void setupToolbar(){
+    private void setProfileWidgets(UserSettings userSettings){
+        Log.d(TAG, "setProfileWidgets: settings with data retrieving from fireabse database. " + userSettings.toString());
+        Log.d(TAG, "setProfileWidgets: settings with data retrieving from fireabse database. " + userSettings.getSettings().getUsername());
 
+//        User user = userSettings.getUser();
+        UserAccountSettings settings = userSettings.getSettings();
+
+        UniversalImageLoader.setImage(settings.getProfile_photo(), mProfilePhoto, null, "");
+        mDisplayName.setText(settings.getDisplay_name());
+        mUsername.setText(settings.getUsername());
+        mWebsite.setText(settings.getWebsite());
+        mDescription.setText(settings.getDescription());
+        mPosts.setText(String.valueOf(settings.getPosts()));
+        mFollowers.setText(String.valueOf(settings.getFollowers()));
+        mFollowing.setText(String.valueOf(settings.getFollowings()));
+        mProgressBar.setVisibility(View.GONE);
+    }
+
+    private  void setupToolbar(){
         ((ProfileActivity)getActivity()).setSupportActionBar(toolbar);
         profileMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,6 +140,7 @@ public class ProfileFragment extends Fragment {
         Log.d(TAG, "setupFirebaseAuth: setting up firebase auth.");
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = mFirebaseDatabase.getReference();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -152,9 +160,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //retrieve user information from the database
-
-                //retrieve images for the user in question
-
+                setProfileWidgets(mFirebaseMethods.getUserSettings(dataSnapshot));
             }
 
             @Override
