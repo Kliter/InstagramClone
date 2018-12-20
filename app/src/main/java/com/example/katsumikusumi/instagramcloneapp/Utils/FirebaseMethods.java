@@ -42,23 +42,23 @@ public class FirebaseMethods {
         }
     }
 
-    public boolean checkIfUserExists(String username, DataSnapshot dataSnapshot) {
-        Log.d(TAG, "checkIfUserExists: checking if " + username + "already exists.");
-
-        User user = new User();
-        for (DataSnapshot ds: dataSnapshot.child(userID).getChildren()) {
-            Log.d(TAG, "checkIfUserExists: datasnapshot: " + ds);
-
-            user.setEmail(ds.getValue(User.class).getUsername());
-            Log.d(TAG, "checkIfUserExists: username: " + user.getUsername());
-
-            if (StringManipulation.expandUsername(user.getUsername()).equals(username)) {
-                Log.d(TAG, "checkIfUserExists: FOUND A MATCH: "+ user.getUsername());
-                return true;
-            }
-        }
-        return false;
-    }
+//    public boolean checkIfUserExists(String username, DataSnapshot dataSnapshot) {
+//        Log.d(TAG, "checkIfUserExists: checking if " + username + "already exists.");
+//
+//        User user = new User();
+//        for (DataSnapshot ds: dataSnapshot.child(userID).getChildren()) {
+//            Log.d(TAG, "checkIfUserExists: datasnapshot: " + ds);
+//
+//            user.setEmail(ds.getValue(User.class).getUsername());
+//            Log.d(TAG, "checkIfUserExists: username: " + user.getUsername());
+//
+//            if (StringManipulation.expandUsername(user.getUsername()).equals(username)) {
+//                Log.d(TAG, "checkIfUserExists: FOUND A MATCH: "+ user.getUsername());
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
     /**
      * Register a new email and password to Firebase Authentication.
@@ -133,7 +133,7 @@ public class FirebaseMethods {
                 website
         );
 
-        myRef.child(mContext.getString(R.string.user_account_settigs))
+        myRef.child(mContext.getString(R.string.dbname_user_account_settings))
                 .child(userID)
                 .setValue(settings);
     }
@@ -144,7 +144,7 @@ public class FirebaseMethods {
      * @param dataSnapshot
      * @return
      */
-    private UserSettings getUserAccountSettings(DataSnapshot dataSnapshot){
+    public UserSettings getUserSettings(DataSnapshot dataSnapshot){
         Log.d(TAG, "getUserAccountSettings: retrieving user account settings from firebase.");
 
         UserAccountSettings settings = new UserAccountSettings();
@@ -153,7 +153,7 @@ public class FirebaseMethods {
         for (DataSnapshot ds: dataSnapshot.getChildren()) {
 
             //user account settings node
-            if (ds.getKey().equals(mContext.getString(R.string.user_account_settigs))) {
+            if (ds.getKey().equals(mContext.getString(R.string.dbname_user_account_settings))) {
                 Log.d(TAG, "getUserAccountSettings: datasnapshot: " +ds);
 
                 try {
@@ -237,5 +237,17 @@ public class FirebaseMethods {
             }
         }
         return new UserSettings(user, settings);
+    }
+
+    public void updateUsername(String username) {
+        Log.d(TAG, "updateUsername: updating username to:" + username);
+        myRef.child(mContext.getString(R.string.dbname_users))
+                .child(userID)
+                .child(mContext.getString(R.string.field_username))
+                .setValue(username);
+        myRef.child(mContext.getString(R.string.dbname_user_account_settings))
+                .child(userID)
+                .child(mContext.getString(R.string.field_username))
+                .setValue(username);
     }
 }

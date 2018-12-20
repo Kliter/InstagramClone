@@ -3,7 +3,6 @@ package com.example.katsumikusumi.instagramcloneapp.Utils;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
