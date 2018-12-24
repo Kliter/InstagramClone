@@ -187,6 +187,27 @@ public class EditProfileFragment extends Fragment implements ConfirmPasswordDial
 
             //Step3: change the email.
             //           - submit the new email to the database and authentication.
+
+        }
+
+        /**
+         * change the rest of the settings that do not require uniqueness.
+         */
+        if (!mUserSettings.getSettings().getDisplay_name().equals(displayName)) {
+            //update displayname
+            mFirebaseMethods.updateUserAccountSettings(displayName, null, null, 0);
+        }
+        if (!mUserSettings.getSettings().getWebsite().equals(website)) {
+            //update website
+            mFirebaseMethods.updateUserAccountSettings(null, website, null, 0);
+        }
+        if (!mUserSettings.getSettings().getDescription().equals(description)) {
+            //update description
+            mFirebaseMethods.updateUserAccountSettings(null, null, description, 0);
+        }
+        if (!mUserSettings.getSettings().getProfile_photo().equals(phoneNumber)) {
+            //update phoneNumber
+            mFirebaseMethods.updateUserAccountSettings(null, null, null, phoneNumber);
         }
     }
 
