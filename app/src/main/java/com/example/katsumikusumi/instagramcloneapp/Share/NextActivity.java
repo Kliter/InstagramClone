@@ -34,11 +34,13 @@ public class NextActivity extends AppCompatActivity {
 
     //variables
     private static final String mAppend = "file:/";
+    private int imageCount = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_next);
+        mFirebaseMethods = new FirebaseMethods(NextActivity.this);
 
         setupFirebaseAuth();
 
@@ -63,6 +65,17 @@ public class NextActivity extends AppCompatActivity {
         setImage();
     }
 
+    private void someMethod() {
+        /*
+            Step1: Create a data model for Photos.
+            Step2: Add properties to the Photo Objects (caption, data, imageUrl, photo_id, tags, user_id)
+            Step3: Count the number of photos that the user already has.
+            Step4: Update the photo to Firebase Strage
+                a: insert into 'photos' node
+                b: insert into 'use_photos' node
+         */
+    }
+
     /**
      * gets the image url from the incoming intent and displays the chosen image.
      */
@@ -84,6 +97,7 @@ public class NextActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         myRef = mFirebaseDatabase.getReference();
+        Log.d(TAG, "onDataChange: image count: " + imageCount);
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -103,7 +117,8 @@ public class NextActivity extends AppCompatActivity {
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                imageCount = mFirebaseMethods.getImageCount(dataSnapshot);
+                Log.d(TAG, "onDataChange: image count: " + imageCount);
             }
 
             @Override

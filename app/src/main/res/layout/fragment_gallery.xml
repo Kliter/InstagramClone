@@ -34,7 +34,7 @@
             <ProgressBar
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:id="@+id/probressBar"
+                android:id="@+id/progressBar"
                 android:layout_centerInParent="true"/>
 
         </RelativeLayout>
