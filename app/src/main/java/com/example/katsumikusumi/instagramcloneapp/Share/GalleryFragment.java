@@ -39,7 +39,7 @@ public class GalleryFragment extends Fragment {
     private ProgressBar mProgressBar;
     private Spinner directorySpinner;
 
-    //vars
+    //variables
     private ArrayList<String> directories;
     private static final String mAppend = "file:/";
     private String mSelectedImage;
@@ -61,7 +61,7 @@ public class GalleryFragment extends Fragment {
         shareClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: clodsing the gallery fragment.");
+                Log.d(TAG, "onClick: closing the gallery fragment.");
                 getActivity().finish();
             }
         });
@@ -70,7 +70,7 @@ public class GalleryFragment extends Fragment {
         nextScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: navigating to the lfinal share screen.");
+                Log.d(TAG, "onClick: navigating to the final share screen.");
 
                 Intent intent = new Intent(getActivity(), NextActivity.class);
                 intent.putExtra(getString(R.string.selected_image), mSelectedImage);
