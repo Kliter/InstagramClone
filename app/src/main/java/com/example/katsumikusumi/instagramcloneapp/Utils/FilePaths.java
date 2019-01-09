@@ -4,7 +4,7 @@ import android.os.Environment;
 
 public class FilePaths {
 
-    //"strage/emulated/0"
+    //"storage/emulated/0"
     public String ROOT_DIR = Environment.getExternalStorageDirectory().getPath();
 
     public String PICTURES = ROOT_DIR + "/Pictures";
