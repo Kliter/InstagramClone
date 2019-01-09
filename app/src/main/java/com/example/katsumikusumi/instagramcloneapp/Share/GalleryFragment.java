@@ -17,10 +17,12 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.katsumikusumi.instagramcloneapp.Profile.AccountSettingsActivity;
 import com.example.katsumikusumi.instagramcloneapp.R;
 import com.example.katsumikusumi.instagramcloneapp.Utils.FilePaths;
 import com.example.katsumikusumi.instagramcloneapp.Utils.FileSearch;
 import com.example.katsumikusumi.instagramcloneapp.Utils.GridÎmageAdapter;
+import com.google.android.gms.common.internal.safeparcel.SafeParcelable;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
@@ -72,7 +74,13 @@ public class GalleryFragment extends Fragment {
             public void onClick(View v) {
                 Log.d(TAG, "onClick: navigating to the final share screen.");
 
-                Intent intent = new Intent(getActivity(), NextActivity.class);
+                Intent intent;
+                if (isRootTask()) {
+                    intent = new Intent(getActivity(), NextActivity.class);
+                } else {
+                    intent = new Intent(getActivity(), AccountSettingsActivity.class);
+                    intent.putExtra(getString(R.string.return_to_fragment), getString(R.string.edit_profile_fragment));
+                }
                 intent.putExtra(getString(R.string.selected_image), mSelectedImage);
                 startActivity(intent);
             }
@@ -81,6 +89,14 @@ public class GalleryFragment extends Fragment {
         init();
 
         return view;
+    }
+
+    private boolean isRootTask() {
+        if (((ShareActivity)getActivity()).getTask() == 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void init() {
