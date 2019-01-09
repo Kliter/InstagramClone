@@ -103,6 +103,7 @@ public class ShareActivity extends AppCompatActivity{
 
     /**
      * Check a single permission is it has been verified.
+     * return true if permission is not granted.
      * @param permission
      * @return
      */
@@ -110,12 +111,12 @@ public class ShareActivity extends AppCompatActivity{
         Log.d(TAG, "checkPermissions: checking permission: " + permission);
 
         int permissionRequest = ActivityCompat.checkSelfPermission(ShareActivity.this, permission);
-        if (permissionRequest != PackageManager.PERMISSION_GRANTED) {
+        if (permissionRequest == PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "checkPermissions: \n Permission was granted for: " + permission);
+            return true;
+        } else {
             Log.d(TAG, "checkPermissions: \n Permission was not granted for: " + permission);
             return false;
-        } else {
-            Log.d(TAG, "checkPermissions: \n Permission not granted for: " + permission);
-            return true;
         }
     }
 

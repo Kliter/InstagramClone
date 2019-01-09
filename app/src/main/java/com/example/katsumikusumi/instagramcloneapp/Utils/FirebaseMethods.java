@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.katsumikusumi.instagramcloneapp.Models.Photo;
 import com.example.katsumikusumi.instagramcloneapp.R;
 import com.example.katsumikusumi.instagramcloneapp.Models.User;
 import com.example.katsumikusumi.instagramcloneapp.Models.UserAccountSettings;
@@ -25,6 +26,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class FirebaseMethods {
     private static final String TAG = "FirebaseMethods";
@@ -53,7 +59,7 @@ public class FirebaseMethods {
         }
     }
 
-    public void uploadNewPhoto(String photoType, String caption, int count, String imgUrl) {
+    public void uploadNewPhoto(String photoType,final String caption, int count, String imgUrl) {
         Log.d(TAG, "uploadNewPhoto: attempting to upload new photo.");
 
         FilePaths filePaths = new FilePaths();
@@ -77,9 +83,10 @@ public class FirebaseMethods {
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Toast.makeText(mContext, "Photo upload success.", Toast.LENGTH_SHORT).show();
 
-                    Uri firebaseurl = taskSnapshot.getDownloadUrl();
+//                    Uri firebaseurl = taskSnapshot.getDownloadUrl();
 
                     //Step1: add the new photo to 'photo' node and 'user_photos' node.
+//                    addPhotoToDatabase(caption, firebaseurl.toString());
 
                     //Step2: navigate to the main feed so the user can see their photo.
                 }
@@ -105,6 +112,31 @@ public class FirebaseMethods {
             //case2: new profile photo
             Log.d(TAG, "uploadNewPhoto: uploading new PROFILE photo.");
         }
+    }
+
+    private String getTimeStamp() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm;ss'Z'", Locale.JAPAN);
+        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
+        return sdf.format(new Date());
+    }
+
+    private void addPhotoToDatabase(String caption, String url) {
+        Log.d(TAG, "addPhotoToDatabase: adding photo to dastabase");
+
+        String tags = StringManipulation.getTags(caption);
+        String newPhotoKey = myRef.child(mContext.getString(R.string.dbname_photos)).push().getKey();
+        Photo photo = new Photo();
+        photo.setCaption(caption);
+        photo.setDate_created(getTimeStamp());
+        photo.setImage_path(url);
+        photo.setTags(tags);
+        photo.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        photo.setPhoto_id(newPhotoKey);
+
+        //insert into database
+        myRef.child(mContext.getString(R.string.dbname_user_photos))
+                .child(FirebaseAuth.getInstance().getCurrentUser()
+                        .getUid()).child(newPhotoKey).setValue(photo);
 
 
     }
