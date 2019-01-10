@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.example.katsumikusumi.instagramcloneapp.Home.HomeActivity;
 import com.example.katsumikusumi.instagramcloneapp.Models.Photo;
+import com.example.katsumikusumi.instagramcloneapp.Profile.AccountSettingsActivity;
 import com.example.katsumikusumi.instagramcloneapp.R;
 import com.example.katsumikusumi.instagramcloneapp.Models.User;
 import com.example.katsumikusumi.instagramcloneapp.Models.UserAccountSettings;
@@ -61,7 +62,7 @@ public class FirebaseMethods {
         }
     }
 
-    public void uploadNewPhoto(String photoType,final String caption, int count, String imgUrl) {
+    public void uploadNewPhoto(String photoType,final String caption, int count, String imgUrl,Bitmap bm) {
         Log.d(TAG, "uploadNewPhoto: attempting to upload new photo.");
 
         FilePaths filePaths = new FilePaths();
@@ -74,7 +75,10 @@ public class FirebaseMethods {
                     .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + user_id + "/photo" + (count + 1));
 
             //convert image url to bitmap
-            Bitmap bm = ImageManager.getBitmap(imgUrl);
+            if (bm == null) {
+                bm = ImageManager.getBitmap(imgUrl);
+            }
+
             byte[] bytes = ImageManager.getBytesFromBitmap(bm, 100);
 
             UploadTask uploadTask = null;
@@ -122,7 +126,9 @@ public class FirebaseMethods {
                     .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + user_id + "/profile_photo");
 
             //convert image url to bitmap
-            Bitmap bm = ImageManager.getBitmap(imgUrl);
+            if (bm == null) {
+                bm = ImageManager.getBitmap(imgUrl);
+            }
             byte[] bytes = ImageManager.getBytesFromBitmap(bm, 100);
 
             UploadTask uploadTask = null;
@@ -138,6 +144,8 @@ public class FirebaseMethods {
                     //insert into 'user_account_settings'node
                     setProfilePhoto(firebaseurl.toString());
 
+                    ((AccountSettingsActivity)mContext).setViewPager(((AccountSettingsActivity)mContext).pagerAdapter
+                            .getFragmentNumber(mContext.getString(R.string.edit_profile_fragment)));
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
