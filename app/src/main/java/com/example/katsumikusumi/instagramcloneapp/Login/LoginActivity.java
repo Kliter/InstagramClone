@@ -162,7 +162,6 @@ public class LoginActivity extends AppCompatActivity {
         };
     }
 
-
     @Override
     public void onStart() {
         super.onStart();
