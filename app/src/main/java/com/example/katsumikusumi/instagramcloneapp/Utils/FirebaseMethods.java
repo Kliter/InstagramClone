@@ -3,7 +3,6 @@ package com.example.katsumikusumi.instagramcloneapp.Utils;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
@@ -89,10 +88,10 @@ public class FirebaseMethods {
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Toast.makeText(mContext, "Photo upload success.", Toast.LENGTH_SHORT).show();
 
-                    Uri firebaseurl = taskSnapshot.getDownloadUrl();
+//                    Uri firebaseurl = taskSnapshot.getDownloadUrl();
 
                     //Step1: add the new photo to 'photo' node and 'user_photos' node.
-                    addPhotoToDatabase(caption, firebaseurl.toString());
+//                    addPhotoToDatabase(caption, firebaseurl.toString());
 
                     //Step2: navigate to the main feed so the user can see their photo.
                     Intent intent = new Intent(mContext, HomeActivity.class);
@@ -139,10 +138,10 @@ public class FirebaseMethods {
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Toast.makeText(mContext, "Photo upload success.", Toast.LENGTH_SHORT).show();
 
-                    Uri firebaseurl = taskSnapshot.getDownloadUrl();
+//                    Uri firebaseurl = taskSnapshot.getDownloadUrl();
 
                     //insert into 'user_account_settings'node
-                    setProfilePhoto(firebaseurl.toString());
+//                    setProfilePhoto(firebaseurl.toString());
 
                     ((AccountSettingsActivity)mContext).setViewPager(((AccountSettingsActivity)mContext).pagerAdapter
                             .getFragmentNumber(mContext.getString(R.string.edit_profile_fragment)));
