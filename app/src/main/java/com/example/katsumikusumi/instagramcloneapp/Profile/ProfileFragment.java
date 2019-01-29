@@ -196,7 +196,7 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-        /**
+    /**
      * BottomNavigationView setup
      */
     private void setupBottomNavigationView(){
