@@ -15,16 +15,35 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.example.katsumikusumi.instagramcloneapp.Models.Photo;
 import com.example.katsumikusumi.instagramcloneapp.R;
 import com.example.katsumikusumi.instagramcloneapp.Utils.BottomNavigationViewHelper;
 import com.example.katsumikusumi.instagramcloneapp.Utils.GridÎmageAdapter;
 import com.example.katsumikusumi.instagramcloneapp.Utils.UniversalImageLoader;
+import com.example.katsumikusumi.instagramcloneapp.ViewPostFragment;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.util.ArrayList;
 
-public class ProfileActivity extends AppCompatActivity{
+public class ProfileActivity extends AppCompatActivity implements ProfileFragment.OnGridImageSelectedListener {
     private static final String TAG = "ProfileActivity";
+
+    @Override
+    public void onGridImageSelected(Photo photo, int activityNumber) {
+        Log.d(TAG, "onGridImageSelected: selected an image gridview: " + photo.toString());
+
+        ViewPostFragment fragment = new ViewPostFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(getString(R.string.photo), photo);
+        args.putInt(getString(R.string.activity_number), activityNumber);
+        fragment.setArguments(args);
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container, fragment);
+        transaction.addToBackStack(getString(R.string.view_post_fragment));
+        transaction.commit();
+    }
+
     private static final int ACTIVITY_NUM = 4;
 
     private ProfileActivity mContext = ProfileActivity.this;
@@ -40,13 +59,6 @@ public class ProfileActivity extends AppCompatActivity{
         Log.d(TAG, "onCreate: started.");
 
         init();
-
-//        setupBottomNavigationView();
-//        setupToolbar();
-//        setupActivityWidgets();
-//        setProfileImage();
-//
-//        tempGridSetup();
     }
     
     private void init (){
@@ -58,73 +70,4 @@ public class ProfileActivity extends AppCompatActivity{
         transaction.addToBackStack(getString(R.string.profile_fragment));
         transaction.commit();
     }
-    
-
-//    private void tempGridSetup(){
-//        ArrayList<String> imgURLs = new ArrayList<>();
-//        imgURLs.add("https://weekly.ascii.jp/elem/000/000/019/19847/android_limg_280x.jpg");
-//        imgURLs.add("https://weekly.ascii.jp/elem/000/000/019/19847/android_limg_280x.jpg");
-//        imgURLs.add("https://weekly.ascii.jp/elem/000/000/019/19847/android_limg_280x.jpg");
-//        imgURLs.add("https://weekly.ascii.jp/elem/000/000/019/19847/android_limg_280x.jpg");
-//        imgURLs.add("https://weekly.ascii.jp/elem/000/000/019/19847/android_limg_280x.jpg");
-//        imgURLs.add("https://weekly.ascii.jp/elem/000/000/019/19847/android_limg_280x.jpg");
-//        imgURLs.add("https://weekly.ascii.jp/elem/000/000/019/19847/android_limg_280x.jpg");
-//        imgURLs.add("https://weekly.ascii.jp/elem/000/000/019/19847/android_limg_280x.jpg");
-//        imgURLs.add("https://weekly.ascii.jp/elem/000/000/019/19847/android_limg_280x.jpg");
-//        imgURLs.add("https://weekly.ascii.jp/elem/000/000/019/19847/android_limg_280x.jpg");
-//        setupImageGrid(imgURLs);
-//
-//    }
-//
-//    private void setupImageGrid(ArrayList<String> imgURLs){
-//        GridView gridView = findViewById(R.id.gridView);
-//
-//        int gridWidth = getResources().getDisplayMetrics().widthPixels;
-//        int imageWidth = gridWidth/NUM_GRID_COLUMNS;
-//        gridView.setColumnWidth(imageWidth);
-//
-//        GridÎmageAdapter adapter = new GridÎmageAdapter(mContext, R.layout.layout_grid_imageview, "", imgURLs);
-//        gridView.setAdapter(adapter);
-//    }
-//
-//    private void setProfileImage(){
-//        Log.d(TAG, "setProfileImage: setting profile photo.");
-//        String imgURL = "https://weekly.ascii.jp/elem/000/000/019/19847/android_limg_280x.jpg";
-//        UniversalImageLoader.setImage(imgURL, profilePhoto, mProgressBar, "https://");
-//    }
-//
-//    private void setupActivityWidgets(){
-//        mProgressBar = (ProgressBar) findViewById(R.id.profileProgressBar);
-//        mProgressBar.setVisibility(View.GONE);
-//        profilePhoto = (ImageView) findViewById(R.id.profile_photo);
-//    }
-//
-//    private  void setupToolbar(){
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.profileToolBar);
-//        setSupportActionBar(toolbar);
-//
-//        ImageView profileMenu = (ImageView) findViewById(R.id.profileMenu);
-//        profileMenu.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.d(TAG, "onClick: navigating to accountsettings");
-//                Intent intent = new Intent(mContext, AccountSettingsActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-//    }
-//
-//    /**
-//     * BottomNavigationView setup
-//     */
-//    private void setupBottomNavigationView(){
-//        Log.d(TAG, "setupBottomNavigationView: setting up BottomNavigationView");
-//        BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
-//        BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
-//        BottomNavigationViewHelper.enableNavigation(mContext, bottomNavigationViewEx);
-//        Menu menu = bottomNavigationViewEx.getMenu();
-//        MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
-//        menuItem.setChecked(true);
-//    }
-
 }
