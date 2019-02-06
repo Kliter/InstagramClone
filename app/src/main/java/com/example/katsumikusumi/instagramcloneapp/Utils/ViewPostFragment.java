@@ -1,26 +1,37 @@
-package com.example.katsumikusumi.instagramcloneapp;
+package com.example.katsumikusumi.instagramcloneapp.Utils;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.katsumikusumi.instagramcloneapp.Models.Photo;
-import com.example.katsumikusumi.instagramcloneapp.Utils.BottomNavigationViewHelper;
-import com.example.katsumikusumi.instagramcloneapp.Utils.SquareImageView;
-import com.example.katsumikusumi.instagramcloneapp.Utils.UniversalImageLoader;
+import com.example.katsumikusumi.instagramcloneapp.Models.UserAccountSettings;
+import com.example.katsumikusumi.instagramcloneapp.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -32,18 +43,29 @@ public class ViewPostFragment extends Fragment {
 
     //widgets
     private SquareImageView mPostImage;
+    private BottomNavigationViewEx bottomNavigationView;
+    private TextView mBackLabel, mCaption, mUsername, mTimestamp;
+    private ImageView mBackArrow, mElipses, mHeartRed, mHeartWhite, mProfileImage;
 
     //variables
     private Photo mPhoto;
     private int mActivityNumber = 0;
-    private BottomNavigationViewEx bottomNavigationView;
-    private TextView mBackLabel, mCaption, mUsername, mTimestamp;
-    private ImageView mBackArrow, mElipses, mHeartRed, mHeartWhite, mProfileImage;
+    private String photoUsername;
+    private String photoUrl;
+    private UserAccountSettings mUserAccountSettings;
+    private GestureDetector mGestureDetector;
 
     public ViewPostFragment() {
         super();
         setArguments(new Bundle());
     }
+
+    //firebase
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference myRef;
+    private FirebaseMethods mFirebaseMethods;
 
     @Nullable
     @Override
@@ -61,6 +83,8 @@ public class ViewPostFragment extends Fragment {
         mHeartWhite = (ImageView) view.findViewById(R.id.image_heart);
         mProfileImage = (ImageView) view.findViewById(R.id.profile_photo);
 
+        mGestureDetector = new GestureDetector(getActivity(), new GestureListener());
+
         try {
             mPhoto = getPhotoFromBundle();
             UniversalImageLoader.setImage(mPhoto.getImage_path(), mPostImage, null, "");
@@ -70,9 +94,62 @@ public class ViewPostFragment extends Fragment {
         }
 
         setupBottomNavigationView();
-        setupWidgets();
+        setupFirebaseAuth();
+        getPhotoDetails();
+//        setupWidgets();
+        testToggle();
 
         return view;
+    }
+
+    private void testToggle() {
+        mHeartRed.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return mGestureDetector.onTouchEvent(event);
+            }
+        });
+        mHeartWhite.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return mGestureDetector.onTouchEvent(event);
+            }
+        });
+    }
+
+    public class GestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return super.onDown(e);
+        }
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            return super.onDoubleTap(e);
+        }
+    }
+
+    private void getPhotoDetails() {
+        Log.d(TAG, "getPhotoDetails: retrieving photo details.");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        Query query = reference.child(getString(R.string.dbname_user_account_settings))
+                .orderByChild(getString(R.string.field_user_id))
+                .equalTo(mPhoto.getUser_id());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot singleSnapshot: dataSnapshot.getChildren()) {
+                    mUserAccountSettings = singleSnapshot.getValue(UserAccountSettings.class);
+                }
+                setupWidgets();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d(TAG, "onCancelled: query canceled.");
+            }
+        });
+
     }
 
     private void setupWidgets() {
@@ -82,6 +159,8 @@ public class ViewPostFragment extends Fragment {
         } else {
            mTimestamp.setText("TODAY");
         }
+        UniversalImageLoader.setImage(mUserAccountSettings.getProfile_photo(), mProfileImage, null, "");
+        mUsername.setText(mUserAccountSettings.getUsername());
     }
 
     /**
@@ -150,4 +229,49 @@ public class ViewPostFragment extends Fragment {
         MenuItem menuItem = menu.getItem(mActivityNumber);
         menuItem.setChecked(true);
     }
+    /*
+     * ----------------------------Firebase---------------------------------------------------------
+     */
+
+    /*
+     * Setup the firebase auth object.
+     */
+    private void setupFirebaseAuth(){
+        Log.d(TAG, "setupFirebaseAuth: setting up firebase auth.");
+        mAuth = FirebaseAuth.getInstance();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = mFirebaseDatabase.getReference();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+
+                if (user != null) {
+                    //user is signed in
+                    Log.d(TAG, "onAuthStateChanged: signed_in" + user.getUid());
+                } else {
+                    //user is signed out
+                    Log.d(TAG, "onAuthStateChanged: signed_out");
+                }
+            }
+        };
+}
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
+    /*
+     * ----------------------------Firebase---------------------------------------------------------
+     */
 }
