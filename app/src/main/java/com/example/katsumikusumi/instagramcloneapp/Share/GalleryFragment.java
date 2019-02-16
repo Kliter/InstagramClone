@@ -90,6 +90,8 @@ public class GalleryFragment extends Fragment {
 
         init();
 
+        Log.d(TAG, "onCreateView: end onCreateView.");
+
         return view;
     }
 
@@ -101,24 +103,25 @@ public class GalleryFragment extends Fragment {
         }
     }
 
-    private void init() {
+    private void init(){
         FilePaths filePaths = new FilePaths();
 
-        //check for other folders inside "strage/emulated/0/pictures"
+        //check for other folders inside "/storage/emulated/0/pictures"
         if (FileSearch.getDirectoryPaths(filePaths.PICTURES) != null) {
             directories = FileSearch.getDirectoryPaths(filePaths.PICTURES);
         }
+        directories.add(filePaths.CAMERA);
+
         ArrayList<String> directoryNames = new ArrayList<>();
         for (int i = 0; i < directories.size(); i++) {
+            Log.d(TAG, "init: directory: " + directories.get(i));
             int index = directories.get(i).lastIndexOf("/");
             String string = directories.get(i).substring(index);
             directoryNames.add(string);
         }
 
-        directories.add(filePaths.CAMERA);
-
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_spinner_dropdown_item, directoryNames);
+                android.R.layout.simple_spinner_item, directoryNames);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         directorySpinner.setAdapter(adapter);
 
@@ -138,11 +141,12 @@ public class GalleryFragment extends Fragment {
         });
     }
 
-    private void setupGridView(String selectedDirectory) {
+
+    private void setupGridView(String selectedDirectory){
         Log.d(TAG, "setupGridView: directory chosen: " + selectedDirectory);
         final ArrayList<String> imgURLs = FileSearch.getFilePaths(selectedDirectory);
 
-        //set the grid column width.
+        //set the grid column width
         int gridWidth = getResources().getDisplayMetrics().widthPixels;
         int imageWidth = gridWidth/NUM_GRID_COLUMNS;
         gridView.setColumnWidth(imageWidth);
@@ -152,16 +156,13 @@ public class GalleryFragment extends Fragment {
         gridView.setAdapter(adapter);
 
         //set the first image to be displayed when the activity fragment view is inflated
-        try {
-
-        } catch(ArrayIndexOutOfBoundsException e) {
-            Log.e(TAG, "setupGridView: ArrayIndexOutOfBoundsException:" + e.getMessage());
+        try{
+            setImage(imgURLs.get(0), galleryImage, mAppend);
+            mSelectedImage = imgURLs.get(0);
+        }catch (ArrayIndexOutOfBoundsException e){
+            Log.e(TAG, "setupGridView: ArrayIndexOutOfBoundsException: " +e.getMessage() );
         }
 
-
-        setImage(imgURLs.get(0), galleryImage, mAppend);
-        mSelectedImage = imgURLs.get(0);
-        
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -171,6 +172,7 @@ public class GalleryFragment extends Fragment {
                 mSelectedImage = imgURLs.get(position);
             }
         });
+
     }
 
     private void setImage(String imgURL, ImageView image, String append) {

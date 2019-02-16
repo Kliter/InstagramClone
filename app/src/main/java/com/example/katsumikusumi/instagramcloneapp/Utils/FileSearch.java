@@ -1,7 +1,11 @@
 package com.example.katsumikusumi.instagramcloneapp.Utils;
 
+import android.util.Log;
+
 import java.io.File;
 import java.util.ArrayList;
+
+import static android.support.constraint.Constraints.TAG;
 
 public class FileSearch {
 
@@ -11,6 +15,8 @@ public class FileSearch {
      * @return
      */
     public static ArrayList<String> getDirectoryPaths(String directory) {
+        Log.d(TAG, "started getDirectoryPaths");
+        Log.d(TAG, "getDirectoryPaths: passed directory is " + directory);
         ArrayList<String> pathArray = new ArrayList<>();
         File file = new File(directory);
         File[] listfiles = file.listFiles();
@@ -19,6 +25,12 @@ public class FileSearch {
                 pathArray.add(listfiles[i].getAbsolutePath());
             }
         }
+
+        for(int i = 0; i < pathArray.size(); i++) {
+            Log.d(TAG, "getDirectoryPaths: pathArray: " + pathArray.get(i));
+        }
+
+        Log.d(TAG, "end getDirectoryPaths");
         return pathArray;
     }
 

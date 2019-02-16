@@ -48,7 +48,8 @@
             android:horizontalSpacing="1.5dp"
             android:stretchMode="none"
             android:gravity="center"
-            android:layout_marginTop="1dp"/>
+            android:layout_marginTop="1dp"
+            android:id="@+id/gridView"/>
 
     </LinearLayout>
 </RelativeLayout>
