@@ -130,8 +130,7 @@ public class FirebaseMethods {
             }
             byte[] bytes = ImageManager.getBytesFromBitmap(bm, 100);
 
-            UploadTask uploadTask = null;
-            uploadTask = storageReference.putBytes(bytes);
+            UploadTask uploadTask = storageReference.putBytes(bytes);
 
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override

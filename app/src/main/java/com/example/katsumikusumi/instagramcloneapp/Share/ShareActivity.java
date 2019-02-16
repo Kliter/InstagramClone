@@ -53,7 +53,7 @@ public class ShareActivity extends AppCompatActivity{
     }
 
     /**
-     * setup viewpager for manager the tabs
+     * setup viewpager for managing the tabs
      */
     private void setupViewPager() {
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
