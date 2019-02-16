@@ -12,8 +12,16 @@ import com.example.katsumikusumi.instagramcloneapp.Models.Photo;
 import com.example.katsumikusumi.instagramcloneapp.R;
 import com.example.katsumikusumi.instagramcloneapp.Utils.ViewPostFragment;
 
-public class ProfileActivity extends AppCompatActivity implements ProfileFragment.OnGridImageSelectedListener {
+public class ProfileActivity extends AppCompatActivity implements
+        ProfileFragment.OnGridImageSelectedListener ,
+        ViewPostFragment.OnCommentThreadSelectedListener {
+
     private static final String TAG = "ProfileActivity";
+
+    @Override
+    public void onCommentThreadSelectedListener(Photo photo) {
+
+    }
 
     @Override
     public void onGridImageSelected(Photo photo, int activityNumber) {
