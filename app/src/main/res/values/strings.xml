@@ -3,12 +3,11 @@
 
     <!--FragmentNames-->
     <string name="edit_profile_fragment">Edit Profile</string>
+    <string name="view_post_fragment">View Post</string>
     <string name="sign_out_fragment">Sign Out</string>
     <string name="profile_fragment">Profile</string>
-    <string name="view_post_fragment">View Post</string>
+    <string name="view_profile_fragment">ViewProfile</string>
     <string name="view_comments_fragment">View Comments</string>
-
-
 
     <!--DialogNames-->
     <string name="confirm_password_dialog">ConfirmPasswordDialog</string>
@@ -45,13 +44,16 @@
     <!--Intent Extras-->
     <string name="calling_activity">calling_activity</string>
     <string name="selected_image">selected_image</string>
-    <string name="return_to_fragment">return_to_fragment</string>
     <string name="selected_bitmap">selected_bitmap</string>
+    <string name="return_to_fragment">return_to_fragment</string>
+    <string name="intent_user">intent_user</string>
+
 
     <!--activity names-->
     <string name="profile_activity">Profile Activity</string>
+    <string name="search_activity">Search Activity</string>
 
-    <!--activity names-->
+    <!--strings-->
     <string name="gallery">GALLERY</string>
     <string name="photo">PHOTO</string>
     <string name="string_open_camera">Open Camera</string>
