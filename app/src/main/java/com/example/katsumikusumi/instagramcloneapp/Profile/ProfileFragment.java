@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.katsumikusumi.instagramcloneapp.Models.Comment;
 import com.example.katsumikusumi.instagramcloneapp.Models.Like;
 import com.example.katsumikusumi.instagramcloneapp.Models.Photo;
 import com.example.katsumikusumi.instagramcloneapp.R;
@@ -149,6 +150,16 @@ public class ProfileFragment extends Fragment {
                     photo.setUser_id(objectMap.get(getString(R.string.field_user_id)).toString());
                     photo.setDate_created(objectMap.get(getString(R.string.field_date_created)).toString());
                     photo.setImage_path(objectMap.get(getString(R.string.field_image_path)).toString());
+
+                    List<Comment> comments = new ArrayList<Comment>();
+                    for (DataSnapshot dSnapshot: singleSnapshot.child(getString(R.string.field_comments)).getChildren()) {
+                        Comment comment = new Comment();
+                        comment.setUser_id(dSnapshot.getValue(Comment.class).getUser_id());
+                        comment.setComment(dSnapshot.getValue(Comment.class).getComment());
+                        comment.setDate_created(dSnapshot.getValue(Comment.class).getDate_created());
+                        comments.add(comment);
+                    }
+                    photo.setComments(comments);
 
                     List<Like> likesList = new ArrayList<Like>();
                     for (DataSnapshot dSnapshot : singleSnapshot

@@ -8,17 +8,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.ListView
-import android.widget.Toast
+import android.widget.*
 import com.example.katsumikusumi.instagramcloneapp.Models.Comment
 import com.example.katsumikusumi.instagramcloneapp.Models.CommentsListAdapter
+import com.example.katsumikusumi.instagramcloneapp.Models.Like
 import com.example.katsumikusumi.instagramcloneapp.Models.Photo
 import com.example.katsumikusumi.instagramcloneapp.R
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -64,13 +61,12 @@ class ViewCommentsFragment() : Fragment() {
             Log.e(TAG, "onCreateView: NullPointerException: " + e.message)
         }
 
-        val firstComment : Comment = Comment()
-        firstComment.comment = mPhoto?.caption
-        firstComment.user_id = mPhoto?.user_id
-        firstComment.date_created = mPhoto?.date_created
 
-        mComments?.add(firstComment)
-        val adapter : CommentsListAdapter = CommentsListAdapter(context, R.layout.layout_comment, mComments)
+        return view
+    }
+
+    private fun setupWidgets() {
+        val adapter : CommentsListAdapter = CommentsListAdapter(activity, R.layout.layout_comment, mComments)
         mListView?.adapter = adapter
 
         mCheckMark?.setOnClickListener(object: View.OnClickListener{
@@ -86,7 +82,12 @@ class ViewCommentsFragment() : Fragment() {
             }
         })
 
-        return view
+        mBackArrow?.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                Log.d(TAG,"onClick: navigating back")
+                activity?.supportFragmentManager?.popBackStack()
+            }
+        })
     }
 
     private fun closeKeyboard() {
@@ -174,6 +175,87 @@ class ViewCommentsFragment() : Fragment() {
                 Log.d(TAG, "onAuthStateChanged: signed_out")
             }
         }
+
+        if (mPhoto?.comments?.size == 0) {
+            mComments?.clear()
+            var firstComment: Comment  = Comment()
+            firstComment.comment = mPhoto?.caption
+            firstComment.user_id = mPhoto?.user_id
+            firstComment.date_created = mPhoto?.date_created
+            mComments?.add(firstComment)
+            mPhoto?.comments = mComments
+            setupWidgets()
+        }
+
+        myRef?.child(activity?.getString(R.string.dbname_photos)!!)
+                ?.child(mPhoto?.photo_id!!)
+                ?.child(activity?.getString(R.string.field_comments)!!)
+                ?.addChildEventListener(object : ChildEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                    override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                    override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                    override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                        val query: Query? = myRef?.child(activity?.getString(R.string.dbname_photos)!!)
+                                ?.orderByChild(activity?.getString(R.string.field_photo_id)!!)
+                                ?.equalTo(mPhoto?.photo_id)
+
+                        query?.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                for (singleSnapshot in dataSnapshot.children) {
+                                    val photo = Photo()
+                                    val objectMap = singleSnapshot.value as HashMap<String, Any>?
+
+                                    photo.caption = objectMap!![activity?.getString(R.string.field_caption)]!!.toString()
+                                    photo.tags = objectMap[activity?.getString(R.string.field_tags)]!!.toString()
+                                    photo.photo_id = objectMap[activity?.getString(R.string.field_photo_id)]!!.toString()
+                                    photo.user_id = objectMap[activity?.getString(R.string.field_user_id)]!!.toString()
+                                    photo.date_created = objectMap[activity?.getString(R.string.field_date_created)]!!.toString()
+                                    photo.image_path = objectMap[activity?.getString(R.string.field_image_path)]!!.toString()
+
+                                    mComments?.clear()
+                                    val firstComment : Comment = Comment()
+                                    firstComment.comment = mPhoto?.caption
+                                    firstComment.user_id = mPhoto?.user_id
+                                    firstComment.date_created = mPhoto?.date_created
+                                    mComments?.add(firstComment)
+
+                                    for (dSnapshot in singleSnapshot
+                                            .child(activity?.getString(R.string.field_comments)!!).children) {
+                                        val comment = Comment()
+                                        comment.user_id = dSnapshot.getValue(Comment::class.java)?.user_id
+                                        comment.comment = dSnapshot.getValue(Comment::class.java)?.comment
+                                        comment.date_created = dSnapshot.getValue(Comment::class.java)?.date_created
+                                        mComments?.add(comment)
+                                    }
+
+                                    photo.comments = mComments
+                                    mPhoto = photo;
+
+                                    setupWidgets()
+                                }
+
+                            }
+
+                            override fun onCancelled(databaseError: DatabaseError) {
+                                Log.d(TAG, "onCancelled: query canceled.")
+                            }
+                        })
+                    }
+
+                    override fun onChildRemoved(p0: DataSnapshot) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+                }
+        )
     }
 
     override fun onStart() {

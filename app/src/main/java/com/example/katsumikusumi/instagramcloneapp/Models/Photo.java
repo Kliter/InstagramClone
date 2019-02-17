@@ -14,10 +14,11 @@ public class Photo implements Parcelable {
     private String user_id;
     private String tags;
     private List<Like> likes;
+    private List<Comment> comments;
 
     public Photo() {}
 
-    public Photo(String caption, String date_created, String image_path, String photo_id, String user_id, String tags, List<Like> likes) {
+    public Photo(String caption, String date_created, String image_path, String photo_id, String user_id, String tags, List<Like> likes, List<Comment> comments) {
         this.caption = caption;
         this.date_created = date_created;
         this.image_path = image_path;
@@ -25,6 +26,17 @@ public class Photo implements Parcelable {
         this.user_id = user_id;
         this.tags = tags;
         this.likes = likes;
+        this.comments = comments;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(caption);
+        dest.writeString(date_created);
+        dest.writeString(image_path);
+        dest.writeString(photo_id);
+        dest.writeString(user_id);
+        dest.writeString(tags);
     }
 
     protected Photo(Parcel in) {
@@ -47,6 +59,14 @@ public class Photo implements Parcelable {
             return new Photo[size];
         }
     };
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 
     public String getCaption() {
         return caption;
@@ -114,21 +134,12 @@ public class Photo implements Parcelable {
                 ", user_id='" + user_id + '\'' +
                 ", tags='" + tags + '\'' +
                 ", likes=" + likes +
+                ", comments=" + comments +
                 '}';
     }
 
     @Override
     public int describeContents() {
         return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(caption);
-        dest.writeString(date_created);
-        dest.writeString(image_path);
-        dest.writeString(photo_id);
-        dest.writeString(user_id);
-        dest.writeString(tags);
     }
 }
