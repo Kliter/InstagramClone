@@ -24,15 +24,15 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class CommentsListAdapter(context : Context, val resource : Int, objects : List<Comment>) : ArrayAdapter<Comment>(context, resource, objects) {
+class CommentsListAdapter(context : Context?, val resource : Int, objects : List<Comment>?) : ArrayAdapter<Comment>(context, resource, objects) {
 
     val TAG : String = CommentsListAdapter::class.java.simpleName
     var mInflater : LayoutInflater? = null
     var layoutResouce : Int = 0
-    var mContext : Context
+    var mContext : Context?
 
     init {
-        mInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater?
+        mInflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater?
         mContext = context
         layoutResouce = resource
     }
@@ -61,6 +61,7 @@ class CommentsListAdapter(context : Context, val resource : Int, objects : List<
             holder.timestamp = returnView?.findViewById(R.id.comment_time_posted)
             holder.reply = returnView?.findViewById(R.id.comment_reply)
             holder.like = returnView?.findViewById(R.id.comment_like)
+            holder.likes = returnView?.findViewById(R.id.comment_likes)
             holder.profileImage = returnView?.findViewById(R.id.comment_profile_image)
 
             returnView?.tag = holder
@@ -81,9 +82,11 @@ class CommentsListAdapter(context : Context, val resource : Int, objects : List<
         }
 
         //set the username
+
+
         val reference = FirebaseDatabase.getInstance().reference
-        val query = reference.child(mContext.getString(R.string.dbname_user_account_settings))
-                .orderByChild(mContext.getString(R.string.field_user_id))
+        val query = reference.child(mContext?.getString(R.string.dbname_user_account_settings)!!)
+                .orderByChild(mContext?.getString(R.string.field_user_id)!!)
                 .equalTo(getItem(position).user_id)
         query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -102,14 +105,18 @@ class CommentsListAdapter(context : Context, val resource : Int, objects : List<
             }
         })
 
-//        variable.ListenerName( object: ListenerName{
-//            override fun methodName(view: View?): Unit {
-//                process
-//            }
-//        })
+        try {
+            if (position == 0) {
+                holder.like?.visibility = View.GONE
+                holder.likes?.visibility = View.GONE
+                holder.reply?.visibility = View.GONE
+            }
+        } catch(e: NullPointerException) {
+            Log.e(TAG, "getView: NullPointerException: " + e.message)
+        }
 
 
-        return convertView
+        return returnView
     }
 
     /**

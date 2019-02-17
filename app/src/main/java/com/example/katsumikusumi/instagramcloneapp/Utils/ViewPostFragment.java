@@ -274,26 +274,26 @@ public class ViewPostFragment extends Fragment {
         getLikesString();
     }
 
-    private void getPhotoDetails() {
+    private void getPhotoDetails(){
         Log.d(TAG, "getPhotoDetails: retrieving photo details.");
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        Query query = reference.child(getString(R.string.dbname_user_account_settings))
+        Query query = reference
+                .child(getString(R.string.dbname_user_account_settings))
                 .orderByChild(getString(R.string.field_user_id))
                 .equalTo(mPhoto.getUser_id());
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot singleSnapshot: dataSnapshot.getChildren()) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for ( DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
                     mUserAccountSettings = singleSnapshot.getValue(UserAccountSettings.class);
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d(TAG, "onCancelled: query canceled.");
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "onCancelled: query cancelled.");
             }
         });
-
     }
 
     private void setupWidgets() {
@@ -320,6 +320,7 @@ public class ViewPostFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: navigating back.");
+                mOnCommentThreadSelectedListener.onCommentThreadSelectedListener(mPhoto);
             }
         });
 

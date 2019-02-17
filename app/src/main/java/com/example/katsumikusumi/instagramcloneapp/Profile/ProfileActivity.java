@@ -2,6 +2,7 @@ package com.example.katsumikusumi.instagramcloneapp.Profile;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.widget.ProgressBar;
 
 import com.example.katsumikusumi.instagramcloneapp.Models.Photo;
 import com.example.katsumikusumi.instagramcloneapp.R;
+import com.example.katsumikusumi.instagramcloneapp.Utils.ViewCommentsFragment;
 import com.example.katsumikusumi.instagramcloneapp.Utils.ViewPostFragment;
 
 public class ProfileActivity extends AppCompatActivity implements
@@ -20,6 +22,15 @@ public class ProfileActivity extends AppCompatActivity implements
 
     @Override
     public void onCommentThreadSelectedListener(Photo photo) {
+        Log.d(TAG, "onCommentThreadSelectedListener: selected a comment thread");
+        ViewCommentsFragment fragment = new ViewCommentsFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(getString(R.string.photo),photo);
+        fragment.setArguments(args);
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.addToBackStack(getString(R.string.view_comments_fragment));
+        transaction.commit();
 
     }
 
