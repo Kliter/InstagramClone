@@ -81,6 +81,7 @@ public class ViewProfileFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference myRef;
 
     @Nullable
     @Override

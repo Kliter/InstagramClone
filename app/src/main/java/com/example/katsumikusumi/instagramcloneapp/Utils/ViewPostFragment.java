@@ -344,8 +344,18 @@ public class ViewPostFragment extends Fragment {
         Like like = new Like();
         like.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        myRef.child(getString(R.string.dbname_photos)).child(mPhoto.getPhoto_id()).child(getString(R.string.field_likes)).child(newLikeID).setValue(like);
-        myRef.child(getString(R.string.dbname_user_photos)).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(getString(R.string.field_likes)).child(newLikeID).setValue(like);
+        myRef.child(getString(R.string.dbname_photos))
+                .child(mPhoto.getPhoto_id())
+                .child(getString(R.string.field_likes))
+                .child(newLikeID)
+                .setValue(like);
+
+        myRef.child(getString(R.string.dbname_user_photos))
+                .child(mPhoto.getUser_id())
+                .child(mPhoto.getPhoto_id())
+                .child(getString(R.string.field_likes))
+                .child(newLikeID)
+                .setValue(like);
 
         mHeart.toggleLike();
         getLikesString();
