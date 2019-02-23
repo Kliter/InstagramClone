@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import com.example.katsumikusumi.instagramcloneapp.Home.HomeActivity
 import com.example.katsumikusumi.instagramcloneapp.Models.Comment
 import com.example.katsumikusumi.instagramcloneapp.Models.CommentsListAdapter
 import com.example.katsumikusumi.instagramcloneapp.Models.Like
@@ -85,7 +86,13 @@ class ViewCommentsFragment() : Fragment() {
         mBackArrow?.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 Log.d(TAG,"onClick: navigating back")
-                activity?.supportFragmentManager?.popBackStack()
+                if (getCallingActivityFromBundle().equals(getString(R.string.home_activity))) {
+                    activity?.supportFragmentManager?.popBackStack()
+                    (activity as HomeActivity).showLayout()
+                } else {
+                    activity?.supportFragmentManager?.popBackStack()
+                }
+
             }
         })
     }
@@ -137,8 +144,8 @@ class ViewCommentsFragment() : Fragment() {
     private fun getCallingActivityFromBundle(): String? {
         Log.d(TAG, "getPhotoFromBundle: arguments: " + arguments!!)
 
-        val bundle = this.arguments
-        return bundle?.getString(getString(R.string.string_home))
+        val bundle: Bundle = this.arguments!!
+        return bundle.getString(getString(R.string.home_activity))
     }
 
     /**
@@ -148,8 +155,8 @@ class ViewCommentsFragment() : Fragment() {
     private fun getPhotoFromBundle(): Photo? {
         Log.d(TAG, "getPhotoFromBundle: arguments: " + arguments!!)
 
-        val bundle = this.arguments
-        return bundle?.getParcelable(getString(R.string.photo))
+        val bundle: Bundle = this.arguments!!
+        return bundle.getParcelable(getString(R.string.photo))
     }
 
     /*

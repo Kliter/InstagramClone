@@ -1,6 +1,9 @@
 package com.example.katsumikusumi.instagramcloneapp.Models;
 
-public class UserAccountSettings {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class UserAccountSettings implements Parcelable {
 
     private String description;
     private String display_name;
@@ -110,5 +113,15 @@ public class UserAccountSettings {
                 ", username='" + username + '\'' +
                 ", website='" + website + '\'' +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
     }
 }
